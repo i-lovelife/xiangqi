@@ -721,6 +721,24 @@ class GameLogic {
         console.log("将军其",threatList);
         return threatList;
     }//warning
+    
+    searchRole(id,role){
+        let result=[];
+        for (let i =0;i < 10; i++){
+            for (let j =0; j < 9; j++){
+                if(this.checkerboard[i][j]==id+role){
+                    if (id=="r")
+                        result.push([i+1,9-j]);
+                    else
+                        result.push([10-i,j+1]);
+                }
+            }//for2
+        }//for1
+        return result;
+    } //role
 }
+
+//let g=new GameLogic();
+//console.log(g.searchRole("b","w"));
 
 module.exports =GameLogic;
