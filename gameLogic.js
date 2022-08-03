@@ -16,14 +16,23 @@ class GameLogic {
     ["","bc","","","","","","bc",""],
     ["","","","","","","","",""],
     ["bv","bh","be","bo","bt","bo","be","bh","bv"]];
-    this.lastCheckerboard=this.checkerboard;
+    this.lastCheckerboard=[];
     }
     
     stepback(){
-        this.checkerboard=this.lastCheckerboard;
+        if (this.lastCheckerboard.length==0)
+            return false;
+        this.checkerboard=[];
+        for (let i=0; i < this.lastCheckerboard.length; i++)
+            this.checkerboard.push(this.lastCheckerboard[i].slice());
+        this.lastCheckerboard=[];
+        return true;
     }
     
     action(id,chess_piece,location,act,size){
+        this.lastCheckerboard=[];
+        for (let i=0; i < this.checkerboard.length; i++)
+            this.lastCheckerboard.push(this.checkerboard[i].slice());
         let status=0;
         let targetPoint=[-1,-1];
         let index=-1;
@@ -630,7 +639,6 @@ class GameLogic {
             //console.log("目标点",targetPoint,this.checkerboard[targetPoint[0]][targetPoint[1]]);
             //console.log("远点",[index,location],this.checkerboard[index][location]);
         }
-        this.lastCheckerboard=this.checkerboard;
         return status;
     } //action
     
