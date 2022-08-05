@@ -65,6 +65,45 @@ const MAP_OF_CODES_TO_CHINESE_NUMERALS = {
 	"9": "九",
 }
 
+const PINYIN = {
+	PREFIXES: ['qian', 'hou'],
+	PIECES: ['shuai', 'jiang', 'shi', 'xiang', 'che', 'ma', 'pao', 'bing', 'zu'],
+	CHINESE_NUMERALS: ['yi', 'er', 'san', 'si', 'wu', 'liu', 'qi', 'ba', 'jiu'],
+	MOVE_DIRECTIONS: ['jin', 'tui', 'ping'],
+	MAP_OF_PREFIXES_TO_CODES: {
+		"qian": "f",
+		"hou": "b",
+	},
+	MAP_OF_PIECES_TO_CODES: {
+		"shuai": "t",
+		"jiang": "t",
+		"shi": "o",
+		"xiang": "e",
+		"che": "v",
+		"ju": "v",
+		"ma": "h",
+		"pao": "c",
+		"bing": "w",
+		"zu": "w",
+	},
+	MAP_OF_MOVE_DIRECTIONS_TO_CODES: {
+		"jin": "gf",
+		"tui": "gb",
+		"ping": "gh",
+	},
+	MAP_OF_CHINESE_NUMERALS_TO_CODES: {
+		"yi": "1",
+		"er": "2",
+		"san": "3",
+		"si": "4",
+		"wu": "5",
+		"liu": "6",
+		"qi": "7",
+		"ba": "8",
+		"jiu": "9",
+	},
+}
+
 export {
 	PREFIXES,
 	PIECES,
@@ -78,4 +117,5 @@ export {
 	MAP_OF_CODES_TO_MOVE_DIRECTIONS,
 	MAP_OF_CHINESE_NUMERALS_TO_CODES,
 	MAP_OF_CODES_TO_CHINESE_NUMERALS,
+	PINYIN,
 }

@@ -3,32 +3,24 @@ import { artyom } from "./artyom";
 import { MovedRecord } from "./MovedRecord";
 import { commandListener } from "./commandListener";
 import {
-	PREFIXES,
-	PIECES,
-	CHINESE_NUMERALS,
-	MOVE_DIRECTIONS,
-	MAP_OF_PREFIXES_TO_CODES,
 	MAP_OF_CODES_TO_PREFIXES,
-	MAP_OF_PIECES_TO_CODES,
 	MAP_OF_CODES_TO_PIECES,
-	MAP_OF_MOVE_DIRECTIONS_TO_CODES,
-	MAP_OF_CODES_TO_MOVE_DIRECTIONS,
-	MAP_OF_CHINESE_NUMERALS_TO_CODES,
-	MAP_OF_CODES_TO_CHINESE_NUMERALS,
+	PINYIN,
 } from "./constantTable"
 
 
+//走棋指令
 commandListener.addHandler([
 	new RegExp(`
-(${PIECES.join("|")})
-(${CHINESE_NUMERALS.join("|")})
-(${MOVE_DIRECTIONS.join("|")})
-(${CHINESE_NUMERALS.join("|")})
+(${PINYIN.PIECES.join("|")}) 
+(${PINYIN.CHINESE_NUMERALS.join("|")}) 
+(${PINYIN.MOVE_DIRECTIONS.join("|")}) 
+(${PINYIN.CHINESE_NUMERALS.join("|")})
 |
-(${PREFIXES.join("|")})
-(${PIECES.join("|")})
-(${MOVE_DIRECTIONS.join("|")})
-(${CHINESE_NUMERALS.join("|")})
+(${PINYIN.PREFIXES.join("|")}) 
+(${PINYIN.PIECES.join("|")}) 
+(${PINYIN.MOVE_DIRECTIONS.join("|")}) 
+(${PINYIN.CHINESE_NUMERALS.join("|")})
 `.replace(/\n/g, ""), "g"),
 ], function (i, results) {
 	const command = results.pop();  //只提取最后一个合法命令
@@ -39,11 +31,13 @@ commandListener.addHandler([
 
 //询问棋子位置
 commandListener.addHandler([
-	new RegExp(`我的(${PIECES.join("|")})在哪`),
-	new RegExp(`对方的(${PIECES.join("|")})在哪`),
+	// new RegExp(`我的(${PIECES.join("|")})在哪`),
+	new RegExp(`wo de (${PINYIN.PIECES.join("|")}) zai na`),
+	// new RegExp(`对方的(${PIECES.join("|")})在哪`),
+	new RegExp(`dui fang de (${PINYIN.PIECES.join("|")}) zai na`),
 ], function (i, found) {
 	const rawPiece = found[1];
-	const pieceCode = MAP_OF_PIECES_TO_CODES[rawPiece];
+	const pieceCode = PINYIN.MAP_OF_PIECES_TO_CODES[rawPiece];
 	const piece = MAP_OF_CODES_TO_PIECES[pieceCode][+!game.redInAction];
 	const isMe = i == 0;
 	let positions = null;

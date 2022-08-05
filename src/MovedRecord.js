@@ -1,28 +1,21 @@
 import {
-	PREFIXES,
-	PIECES,
-	CHINESE_NUMERALS,
-	MOVE_DIRECTIONS,
-	MAP_OF_PREFIXES_TO_CODES,
 	MAP_OF_CODES_TO_PREFIXES,
-	MAP_OF_PIECES_TO_CODES,
 	MAP_OF_CODES_TO_PIECES,
-	MAP_OF_MOVE_DIRECTIONS_TO_CODES,
 	MAP_OF_CODES_TO_MOVE_DIRECTIONS,
-	MAP_OF_CHINESE_NUMERALS_TO_CODES,
 	MAP_OF_CODES_TO_CHINESE_NUMERALS,
+	PINYIN,
 } from "./constantTable"
 
 const reg = new RegExp(`
-(${PIECES.join("|")})
-(${CHINESE_NUMERALS.join("|")})
-(${MOVE_DIRECTIONS.join("|")})
-(${CHINESE_NUMERALS.join("|")})
+(${PINYIN.PIECES.join("|")})
+(${PINYIN.CHINESE_NUMERALS.join("|")})
+(${PINYIN.MOVE_DIRECTIONS.join("|")})
+(${PINYIN.CHINESE_NUMERALS.join("|")})
 |
-(${PREFIXES.join("|")})
-(${PIECES.join("|")})
-(${MOVE_DIRECTIONS.join("|")})
-(${CHINESE_NUMERALS.join("|")})
+(${PINYIN.PREFIXES.join("|")})
+(${PINYIN.PIECES.join("|")})
+(${PINYIN.MOVE_DIRECTIONS.join("|")})
+(${PINYIN.CHINESE_NUMERALS.join("|")})
 `.replace(/\n/g, ""), "g");
 
 /**
@@ -54,15 +47,19 @@ class MovedRecord {
 
 	//解析招法
 	_parse(command) {
-		if (PREFIXES.includes(command[0])) {
-			this.prefix = MAP_OF_PREFIXES_TO_CODES[command[0]];
-			this.piece = MAP_OF_PIECES_TO_CODES[command[1]];
-		} else {
-			this.piece = MAP_OF_PIECES_TO_CODES[command[0]];
-			this.location = MAP_OF_CHINESE_NUMERALS_TO_CODES[command[1]];
+		command = command.split(" ");
+		if (command.length == 1) {  //兼容汉字匹配
+			command = command[0];
 		}
-		this.moveDirection = MAP_OF_MOVE_DIRECTIONS_TO_CODES[command[2]];
-		this.moveRange = MAP_OF_CHINESE_NUMERALS_TO_CODES[command[3]];
+		if (PINYIN.PREFIXES.includes(command[0])) {
+			this.prefix = PINYIN.MAP_OF_PREFIXES_TO_CODES[command[0]];
+			this.piece = PINYIN.MAP_OF_PIECES_TO_CODES[command[1]];
+		} else {
+			this.piece = PINYIN.MAP_OF_PIECES_TO_CODES[command[0]];
+			this.location = PINYIN.MAP_OF_CHINESE_NUMERALS_TO_CODES[command[1]];
+		}
+		this.moveDirection = PINYIN.MAP_OF_MOVE_DIRECTIONS_TO_CODES[command[2]];
+		this.moveRange = PINYIN.MAP_OF_CHINESE_NUMERALS_TO_CODES[command[3]];
 	}
 
 	/**

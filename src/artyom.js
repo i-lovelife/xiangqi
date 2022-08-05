@@ -5,6 +5,7 @@
  */
 
 import Artyom from "artyom.js";
+import pinyin from "pinyin"
 import { printLog } from "./printLog";
 import { commandListener } from "./commandListener";
 import "./commands"
@@ -44,6 +45,10 @@ artyom.addCommands({
 		printLog(command, "in");
 		//过滤中文标点
 		command = command.replace(/[。；，：“”（）、？！《》]/g, "");
+		//汉字转拼音
+		command = pinyin(command, {
+			style: "NORMAL",
+		}).join(" ");
 		commandListener.onNewCommand(command);
 	}
 });
