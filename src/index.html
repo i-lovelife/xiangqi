@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>盲棋</title>
+	<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+	<main class="container">
+		<div class="row">
+			<div id="wrapper" class="col-sm-6 col-sm-offset-3" style="overflow: scroll;">
+				<script>
+					var wrapper = document.getElementById('wrapper');
+					wrapper.style.height = wrapper.offsetWidth * 0.9 + 'px';
+				</script>
+				<ul id="logs-list" class="list-group" tabindex="0"> </ul>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 col-sm-offset-3">
+				<div class="btn-group">
+					<button id="start-or-end-btn" type="button" class="btn btn-default">开始游戏</button>
+					<button id="revoke-btn" type="button" class="btn btn-default" disabled>悔棋</button>
+					<button id="draw-btn" type="button" class="btn btn-default" disabled>求和</button>
+					<button id="surrender-btn" type="button" class="btn btn-default" disabled>认输</button>
+					<button id="listen-btn" type="button" class="btn btn-default" disabled>开始聆听</button>
+				</div>
+			</div>
+		</div>
+
+	</main>
+
+</body>
+
+</html>
