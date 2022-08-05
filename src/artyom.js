@@ -43,8 +43,15 @@ artyom.addCommands({
 	indexes: ["*"],
 	action: function (i, command) {
 		printLog(command, "in");
-		//过滤中文标点
-		command = command.replace(/[。；，：“”（）、？！《》]/g, "");
+		//数字转汉字
+		command = command.split("").map(c => {
+			if (c > 0) {
+				return MAP_OF_CODES_TO_CHINESE_NUMERALS[c];
+			}
+			return c;
+		}).join("");
+		//过滤中文标点和空格
+		command = command.replace(/[。；，：“”（）、？！《》 ]/g, "");
 		//汉字转拼音
 		command = pinyin(command, {
 			style: "NORMAL",
@@ -55,6 +62,7 @@ artyom.addCommands({
 
 // 开始聆听时播放提示音
 import startRecordingUri from "/assets/sounds/startRecording.wav";
+import { MAP_OF_CODES_TO_CHINESE_NUMERALS } from "./constantTable";
 // import endRecordingUri from "/assets/sounds/endRecording.wav";
 const startRecordingSound = new Audio(startRecordingUri);
 // const endRecordingSound = new Audio(endRecordingUri);
