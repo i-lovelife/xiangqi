@@ -104,6 +104,13 @@ const PINYIN = {
 	},
 }
 
+const SPEECH_SYNTHESIS_CORRECTION_TABLE = {
+	"将": "匠",
+	"相": "象",
+	"车": "狙",
+	"卒": "足",
+};
+
 export {
 	PREFIXES,
 	PIECES,
@@ -118,4 +125,5 @@ export {
 	MAP_OF_CHINESE_NUMERALS_TO_CODES,
 	MAP_OF_CODES_TO_CHINESE_NUMERALS,
 	PINYIN,
+	SPEECH_SYNTHESIS_CORRECTION_TABLE,
 }
