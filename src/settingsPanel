@@ -1,0 +1,26 @@
+/**
+ * @fileoverview 设置面板的功能项
+ */
+
+import { gameSettings } from "./gameSettings";
+
+const showedInputTextCheckbox = document.querySelector("#showed-input-text-checkbox");
+
+showedInputTextCheckbox.checked = gameSettings.showedInputText;
+
+const hiddenInputLogStyle = document.createElement("style");
+hiddenInputLogStyle.innerHTML = `.input-log {
+display: none;
+}`;
+if (!gameSettings.showedInputText) {
+	document.head.append(hiddenInputLogStyle);
+}
+
+showedInputTextCheckbox.addEventListener("change", () => {
+	gameSettings.showedInputText = showedInputTextCheckbox.checked;
+	if (!gameSettings.showedInputText) {
+		document.head.appendChild(hiddenInputLogStyle);
+	} else {
+		hiddenInputLogStyle.remove();
+	}
+});

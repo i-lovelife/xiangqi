@@ -41,6 +41,7 @@ listenBtn.addEventListener("click", e => {
 	}
 });
 
+
 //初始提示
 printLog("欢迎来到盲棋游戏！");
 printLog("本游戏支持语音走棋，模拟真实的盲棋对弈场景。");
@@ -117,3 +118,7 @@ artyom.when("COMMAND_RECOGNITION_START", function () {
 artyom.when("COMMAND_RECOGNITION_END", function (status) {
 	listenBtn.innerText = "开始聆听";
 });
+
+
+//需动态加载的模块
+import("./settingsPanel");
