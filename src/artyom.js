@@ -62,7 +62,7 @@ artyom.addCommands({
 
 // 开始聆听时播放提示音
 import startRecordingUri from "/assets/sounds/startRecording.wav";
-import { MAP_OF_CODES_TO_CHINESE_NUMERALS } from "./constantTable";
+import { MAP_OF_CODES_TO_CHINESE_NUMERALS, SPEECH_SYNTHESIS_CORRECTION_TABLE } from "./constantTable";
 // import endRecordingUri from "/assets/sounds/endRecording.wav";
 const startRecordingSound = new Audio(startRecordingUri);
 // const endRecordingSound = new Audio(endRecordingUri);
@@ -100,11 +100,18 @@ artyom.when("ERROR", function (error) {
 	console.log(error.message);
 });
 
-// 捕获输出内容
+// 捕获语音合成的文本，纠正发音
 {
 	const say = artyom.say;
 	artyom.say = function (text, ...params) {
 		printLog(text, "out");
+		//纠正语音合成的发音
+		const correctText = [];
+		for (let i = 0; i < text.length; i++) {
+			const chr = text[i];
+			correctText[i] = SPEECH_SYNTHESIS_CORRECTION_TABLE[chr] || chr;
+		}
+		text = correctText.join("");
 		return say.call(artyom, text, ...params);
 	}
 }
@@ -119,6 +126,8 @@ artyom.redirectRecognizedTextOutput((recognized, isFinal) => {
 	}
 });
 */
+
+
 export {
 	artyom,
 	artyomConfig,
