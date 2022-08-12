@@ -13,7 +13,7 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{ test: /\.wav$/i, use: "file-loader" }
+			{ test: /\.(wav|mp3|ogg)$/i, use: "file-loader" }
 		]
 	},
 	plugins: [
