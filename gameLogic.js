@@ -631,10 +631,18 @@ class GameLogic {
                 status=4;
             }
             else {
+                let temp=this.checkerboard[targetPoint[0]][targetPoint[1]];
                 this.checkerboard[targetPoint[0]][targetPoint[1]]=this.checkerboard[index][location];
                 this.checkerboard[index][location]="";
-                if (this.warning(id).length > 0)
+                if ((id=="r" && this.warning("b").length !=0) || (id=="b" && this.warning("r") !=0)){
+                    this.checkerboard[index][location]=this.checkerboard[targetPoint[0]][targetPoint[1]];
+                    this.checkerboard[targetPoint[0]][targetPoint[1]]=temp;
+                    return 0;
+                }
+                if (this.warning(id).length !=0) {
                     status=5;
+                    
+                }
             }
             //console.log("目标点",targetPoint,this.checkerboard[targetPoint[0]][targetPoint[1]]);
             //console.log("远点",[index,location],this.checkerboard[index][location]);
@@ -683,6 +691,7 @@ class GameLogic {
         let positionList=[];
         let kingPosition=[];
         let threatList =[];
+        console.log("targetId",targetId);
         for (let i =0; i <10; i++){
             for (let j=0; j < 9; j++){
                 if (this.checkerboard[i][j]!="" && this.checkerboard[i][j][0]!=targetId)
@@ -716,6 +725,7 @@ class GameLogic {
                     }
                     break;
                 case "h":
+                    console.log("contemporary", k,j);
                     if (Math.abs(positionList[i][1][0] -kingPosition[0]) ==2 && Math.abs(positionList[i][1][1] -kingPosition[1]) ==1) {
                         if ((kingPosition[0] > positionList[i][1][0] && this.checkerboard[k+1][j]=="") || (kingPosition[0] < positionList[i][1][0] && this.checkerboard[k-1][j]==""))
                             threatList.push(positionList[i]);
@@ -744,9 +754,259 @@ class GameLogic {
         }//for1
         return result;
     } //role
+    
+    killup(myId){
+        let targetId="b";
+        if (myId=="b")
+            targetId="r";
+        let threatList = this.warning(myId);
+        let kingPosition = this.searchRole(targetId, "t");
+        console.log("kingPosition",kingPosition);
+        console.log("threatList",threatList);
+        //被将军的老将自己向四个方向尝试移动，试探可能的逃脱位置
+        if (![0,5].includes(this.action(targetId,"t",kingPosition[0][1], "gf","1"))){
+            this.stepback();
+            console.log("king",this.searchRole(targetId,"t"));
+            return 0;
+        }
+        this.stepback();
+        if (![0,5].includes(this.action(targetId,"t",kingPosition[0][1], "gb","1"))){
+            this.stepback();
+            return 0;
+        }
+        this.stepback();
+        if (kingPosition[0][1]==5){
+            if (![0,5].includes(this.action(targetId,"t",kingPosition[0][1], "gh","4"))){
+                this.stepback();
+                return 0;
+            }
+            this.stepback();
+            if (![0,5].includes(this.action(targetId,"t",kingPosition[0][1], "gh","6"))){
+                this.stepback();
+                return 0;
+            }
+            this.stepback();
+        }
+        else {
+            if (![0,5].includes(this.action(targetId,"t",kingPosition[0][1], "gh","5"))){
+                this.stepback();
+                return 0;
+            }
+            this.stepback();
+        }
+        //console.log("threatList",threatList);
+        kingPosition=kingPosition[0];
+        if (targetId=="b"){
+            kingPosition[0] = 10 - kingPosition[0];
+            kingPosition[1] = 9 - kingPosition[1];
+        }
+        else {
+            kingPosition[0]-=1;
+            kingPosition[1]-=1;
+        }
+        for (let i =0; i < threatList.length; i++){
+            let x=threatList[i][1][0];
+            let y=threatList[i][1][1];
+            if (this.eatIt([x,y], targetId) ==1)
+                return 0;
+            console.log("here5");
+            switch (this.checkerboard[x][y][1]) {
+                case "v":
+                console.log("x,y",x,y,"kingPosition",kingPosition);
+                
+                if ( x ==kingPosition[0]){
+                    if (y < kingPosition[1]){
+                        for (let j =y+1; j < kingPosition[1]; j++){
+                            if (this.eatIt([x,j], targetId) ==1)
+                                return 0;
+                        }
+                    }
+                    else{
+                        for (let j = kingPosition[1]+1; j < y; j++){
+                            if (this.eatIt([x,j], targetId) ==1)
+                                return 0;
+                        }
+                    }
+                } //if
+                else {
+                    if (x < kingPosition[0]){
+                        for (let j =x+1; j < kingPosition[0]; j++){
+                            if (this.eatIt([j,y], targetId) ==1)
+                                return 0;
+                        }
+                    }
+                    else{
+                        for (let j = kingPosition[0]+1; j < x; j++){
+                            if (this.eatIt([j,y], targetId) ==1)
+                                return 0;
+                        }
+                    }
+                } //else
+                break;
+                case "h":
+                if (Math.abs(x - kingPosition[0]) ==2){
+                    if (this.eatIt([(x + kingPosition[0])/2, (x + kingPosition[0])/2],targetId) ==1)
+                        return 0;
+                }
+                if (Math.abs(y - kingPosition[1]) ==2){
+                    if (this.eatIt([(y + kingPosition[1])/2, (y + kingPosition[1])/2], targetId) ==1)
+                        return 0;
+                }
+                break;
+                case "c":
+                if ( x ==kingPosition[0]){
+                    if (y < kingPosition[1]){
+                        for (let j =y+1; j < kingPosition[1]; j++){
+                            if (this.checkerboard[x][j] !=""){
+                                if (this.checkerboard[x][j][0] ==targetId)
+                                    return 0;
+                                else {
+                                    if (this.eatIt([x,j], targetId) ==1)
+                                        return 0;
+                                }
+                            }
+                            else{
+                                if (this.eatIt([x,j], targetId) ==1)
+                                    return 0;
+                            }
+                        }
+                    }
+                    else{
+                        for (let j = kingPosition[1]+1; j < y; j++){
+                            if (this.checkerboard[x][j]!=""){
+                                if (this.checkerboard[x][j][0] ==targetId)
+                                    return 0;
+                                else {
+                                    if (this.eatIt([x,j] , targetId) ==1)
+                                        return 0;
+                                }
+                            }
+                            else {
+                                if (this.eatIt([x,j], targetId) ==1)
+                                    return 0;
+                            }
+                        }
+                    }
+                } //if
+                else {
+                    if (x < kingPosition[0]){
+                        for (let j =x+1; j < kingPosition[0]; j++){
+                            if (this.checkerboard[j][y]!=""){
+                                if (this.checkerboard[j][y][0] ==targetId)
+                                    return 0;
+                                else {
+                                    if (this.eatIt([j,y] , targetId) ==1)
+                                        return 0;
+                                }
+                            }
+                            else {
+                                if (this.eatIt([j,y], targetId) ==1)
+                                    return 0;
+                            }
+                        }
+                    }
+                    else{
+                        for (let j = kingPosition[0]+1; j < x; j++){
+                            if (this.checkerboard[j][y]!=""){
+                                if (this.checkerboard[j][y][0] ==targetId)
+                                    return 0;
+                                else {
+                                    if (this.eatIt([j,y] , targetId) ==1)
+                                        return 0;
+                                }
+                            }
+                            else {
+                                if (this.eatIt([j,y], targetId) ==1)
+                                    return 0;
+                            }
+                        }
+                    }
+                } //else
+                break;
+                default:
+                console.log(8);
+            } //switch
+        } //for
+        return 1;
+    } //killup
+    
+    eatIt(position, id){
+        let characterList = [];
+        for (let i =0;i < 10; i++){
+            for (let j =0; j < 9; j++){
+                if(this.checkerboard[i][j][0]==id)
+                    characterList.push([i, j]);
+            }
+        }
+        console.log(characterList);
+        for (let i =0; i < characterList.length; i++){
+            let x=characterList[i][0];
+            let y = characterList[i][1];
+            switch (this.checkerboard[x][y][1]) {
+                case "v":
+                if (x ==position[0]) {
+                    console.log("length",this.findOut("",x, "horization", [y,position[1]]).length);
+                    if (this.findOut("",x, "horization", [y,position[1]]).length ==Math.abs(y - position[1] -1)) 
+                        return 1;
+                    
+                } //if
+                if (y ==position[1]) {
+                    if (this.findOut("", y, "vertical", [x, position[0]]).length == Math.abs(x - position[0] -1))
+                        return 1;
+                }//if 
+                break;
+                case "h":
+                if (Math.abs(x - position[0]) ==2 && Math.abs(y - position[1]) ==1){
+                    if (this.findOut("", y, "vertical", [(x+position[0])/2,(x+position[0])/2]).length==1)
+                        return 1;
+                }
+                if (Math.abs(y - position[1]) ==2 && Math.abs(x - position[0]) ==1){
+                    if (this.findOut("", x, "horization", [(y+position[1])/2, (y+position[1])/2]).length ==1) 
+                        return 1;
+                }
+                break;
+                case "c":
+                if (x==position[0]) {
+                    if (this.findOut("",x, "horization", [y,position[1]]).length ==Math.abs(y - position[1] -2)) 
+                        return 1;
+                }
+                if (y == position[1]) {
+                    if (this.findOut("", y, "vertical", [x, position[0]]).length == Math.abs(x - position[0] -2))
+                        return 1;
+                }
+                break;
+                case "o":
+                if (id =="b"){
+                if ([7,8,9].includes(position[0]) && [3,4,5].includes(position[1]))
+                    if (Math.abs(x - position[0])==1 && Math.abs(y - position[1])==1)
+                        return 1;
+                }
+                else {
+                    if ([0,1,2].includes(position[0]) && [3,4,5].includes(position[1]))
+                        if (Math.abs(x - position[0]) ==1 && Math.absj(y - position[1]) ==1)
+                            return 1;
+                }
+                break;
+                case "e":
+                if (id=="r"){
+                    if (position[0] < 5)
+                        if (Math.abs(x - position[0])==2 && Math.abs(y - position[1])==2)
+                            return 1;
+                }
+                else {
+                    if (position[0] > 4) 
+                        if (Math.abs(x - position[0]) ==2 && Math.abs(y - position[1]) ==2) 
+                            return 1;
+                }
+                break;
+                default:
+                console.log(9);
+            } //switch
+            
+        }//for
+        return 0;
+    } //eatIt
 }
 
-//let g=new GameLogic();
-//console.log(g.searchRole("b","w"));
 
 module.exports =GameLogic;
