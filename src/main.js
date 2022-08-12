@@ -1,6 +1,7 @@
 import { gameController as game } from "./gameController"
 import { artyom, artyomConfig } from "./artyom"
 import { printLog } from "./printLog";
+import { soundPlayer } from "./gameAudio";
 
 const startOrEndBtn = document.querySelector('#start-or-end-btn');  //开始或结束游戏
 const revokeBtn = document.querySelector('#revoke-btn');  //悔棋
@@ -60,6 +61,7 @@ game.on("gameStarted", () => {
 	});
 	startOrEndBtn.innerText = "结束游戏";
 	revokeBtn.disabled = drawBtn.disabled = surrenderBtn.disabled = listenBtn.disabled = false;
+	soundPlayer.play("gameStarted");
 });
 
 game.on("gameEnded", winner => {
@@ -67,12 +69,15 @@ game.on("gameEnded", winner => {
 	switch (winner) {
 		case "r":
 			artyom.say("红方获胜！");
+			soundPlayer.play("win");
 			break;
 		case "b":
 			artyom.say("黑方获胜！");
+			soundPlayer.play("win");
 			break;
 		case "draw":
 			artyom.say("平局！");
+			soundPlayer.play("draw");
 			break;
 	}
 	artyom.fatality();
@@ -82,10 +87,12 @@ game.on("gameEnded", winner => {
 
 game.on("moveCompleted", movedRecord => {
 	artyom.say(movedRecord.toString());
+	soundPlayer.play("moveCompleted");
 });
 
 game.on("moveFailed", movedRecord => {
 	artyom.say("无法完成" + movedRecord.toString());
+	soundPlayer.play("moveFailed");
 });
 
 game.on("moveRevoke", () => {
@@ -94,10 +101,12 @@ game.on("moveRevoke", () => {
 
 game.on("eat", () => {
 	artyom.say("吃子！");
+	soundPlayer.play("capture");
 });
 
 game.on("jiang", () => {
 	artyom.say("将军！");
+	soundPlayer.play("check");
 });
 
 game.on("draw", isRed => {
