@@ -12,7 +12,7 @@ class GameController extends EventEmitter {
 
 	constructor() {
 		super();
-		this.logic = null;
+		this.logic = new GameLogic();
 	}
 
 	startGame() {
