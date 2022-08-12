@@ -78,6 +78,10 @@ class GameController extends EventEmitter {
 			case 5:  //将军
 				this._moveCompleted(movedRecord);
 				this._jiang();
+				//是否绝杀
+				if (this.logic.killup(movedRecord.color)) {
+					this.endGame(movedRecord.color);
+				}
 				break;
 			default:
 				console.error("Unknown return value: " + ret);
