@@ -2,17 +2,21 @@
 function printLog(log, type) {
 	const logsList = document.querySelector('#logs-list');
 	let prefix = "";
+	let className = "log";
 	switch (type) {
 		case "in":
 			prefix = "input: ";
+			className = "input-log";
 			break;
 		case "out":
 			prefix = "output: ";
+			className = "output-log";
 			break;
 	}
 
 	const li = createListItem({
 		innerHTML: prefix + log,
+		classList: ["list-group-item", className],
 	});
 	logsList.appendChild(li);
 	li.scrollIntoView();

@@ -30,11 +30,37 @@
 					<button id="draw-btn" type="button" class="btn btn-default" disabled>求和</button>
 					<button id="surrender-btn" type="button" class="btn btn-default" disabled>认输</button>
 					<button id="listen-btn" type="button" class="btn btn-default" disabled>开始聆听</button>
+					<button id="settings-btn" type="button" class="btn btn-default" data-toggle="modal"
+						data-target="#settings-modal">设置</button>
 				</div>
 			</div>
 		</div>
 
 	</main>
+
+
+	<div class="modal fade" id="settings-modal" tabindex="-1" role="dialog" aria-labelledby="settings-modal-title">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="关闭">&times;</button>
+					<h4 class="modal-title" id="settings-modal-title">设置</h4>
+				</div>
+				<div class="modal-body">
+
+					<form role="form">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="showed-input-text-checkbox">
+								显示我说的话
+							</label>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 
