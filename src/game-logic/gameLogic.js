@@ -2,14 +2,14 @@
     description: a class named GameLogic includes action, findOut, stepback, decision and warning several methods.
     developer: Eric.
 */
-
 /***********************************\
  * 棋子 
  \***********************************/
- var Chess = {
-	createNew: function(img_size, size, type, x, y, z) {
-		var chess = {};
-		chess.type = type;
+// import { Crafty } from 'craftyjs';
+var Chess = {
+    createNew: function (img_size, size, type, x, y, z) {
+        var chess = {};
+        chess.type = type;
         CODES_MAP = {
             "t": "jiang",
             "o": "shi",
@@ -22,94 +22,94 @@
         chess.img_file = "/img/chess/chess/" + type[0] + "_" + CODES_MAP[type[1]] + ".png";
         // console.log("ori=" + type + "img=" + img_file);
 
-		function norm(x) {
-			var max_v = 10;
-			var min_v = 2;
-			if (x < 0 && x > -min_v) x = -minv_v;
-			if (x < -max_v) x = -max_v;
-			if (x > 0 && x < min_v) x = min_v;
-			if (x > max_v) x = max_v;
-			return x;
-		}
+        function norm(x) {
+            var max_v = 10;
+            var min_v = 2;
+            if (x < 0 && x > -min_v) x = -minv_v;
+            if (x < -max_v) x = -max_v;
+            if (x > 0 && x < min_v) x = min_v;
+            if (x > max_v) x = max_v;
+            return x;
+        }
 
-		/***********************************\
-		 * 棋子移动动画 
-		 \***********************************/
-		chess.moveAnimation = function() {
-			chess.sprite.bind('EnterFrame',
-				function() {
-					if (this.x != this.tx || this.y != this.ty) {
-						var speed = 0.3;
-						this.dx = (this.tx - this.x) * speed;
-						this.dy = (this.ty - this.y) * speed;
-						var v = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
-						var nv = norm(v);
-						//	var nv = 5;
-						this.dx = this.dx * nv / v;
-						this.dy = this.dy * nv / v;
+        /***********************************\
+         * 棋子移动动画 
+         \***********************************/
+        chess.moveAnimation = function () {
+            chess.sprite.bind('EnterFrame',
+                function () {
+                    if (this.x != this.tx || this.y != this.ty) {
+                        var speed = 0.3;
+                        this.dx = (this.tx - this.x) * speed;
+                        this.dy = (this.ty - this.y) * speed;
+                        var v = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
+                        var nv = norm(v);
+                        //	var nv = 5;
+                        this.dx = this.dx * nv / v;
+                        this.dy = this.dy * nv / v;
 
-						this.z = 2;
-						if (Math.abs(this.tx - this.x) < Math.abs(this.dx)) {
-							this.x = this.tx;
-							this.dx = 0;
-						} else this.x += this.dx;
+                        this.z = 2;
+                        if (Math.abs(this.tx - this.x) < Math.abs(this.dx)) {
+                            this.x = this.tx;
+                            this.dx = 0;
+                        } else this.x += this.dx;
 
-						if (Math.abs(this.ty - this.y) < Math.abs(this.dy)) {
-							this.y = this.ty;
-							this.dy = 0;
-						} else this.y += this.dy;
+                        if (Math.abs(this.ty - this.y) < Math.abs(this.dy)) {
+                            this.y = this.ty;
+                            this.dy = 0;
+                        } else this.y += this.dy;
 
-						if (this.x == this.tx && this.y == this.ty) {
-							// document.dispatchEvent(chess.game.EndMoveEvent);
-						}
-					}
-				}
-			);
-		}
+                        if (this.x == this.tx && this.y == this.ty) {
+                            // document.dispatchEvent(chess.game.EndMoveEvent);
+                        }
+                    }
+                }
+            );
+        }
 
-		/***********************************\
-		* 棋子移动和位置变换 
-		\***********************************/
-		chess.moveTo = function(p) {
-			chess.sprite.tx = p.x;
-			chess.sprite.ty = p.y;
-			chess.sprite.z = 1;
-		}
+        /***********************************\
+        * 棋子移动和位置变换 
+        \***********************************/
+        chess.moveTo = function (p) {
+            chess.sprite.tx = p.x;
+            chess.sprite.ty = p.y;
+            chess.sprite.z = 1;
+        }
 
-		chess.setTo = function(p) {
-			chess.sprite.x = p.x;
-			chess.sprite.y = p.y;
-			chess.sprite.tx = p.x;
-			chess.sprite.ty = p.y;
-			chess.sprite.z = 1;
-		}
+        chess.setTo = function (p) {
+            chess.sprite.x = p.x;
+            chess.sprite.y = p.y;
+            chess.sprite.tx = p.x;
+            chess.sprite.ty = p.y;
+            chess.sprite.z = 1;
+        }
 
-		/***********************************\
-		 * 棋子的加载 
-		 \***********************************/
-		chess.loadChess = function() {
-            console.log("img="+chess.img_file);
-			Crafty.sprite(chess.img_file, {
-				tmp: [0, 0, img_size, img_size]
-			});
+        /***********************************\
+         * 棋子的加载 
+         \***********************************/
+        chess.loadChess = function () {
+            // console.log("img="+chess.img_file);
+            Crafty.sprite(chess.img_file, {
+                tmp: [0, 0, img_size, img_size]
+            });
 
-			chess.sprite = Crafty.e("2D, Canvas, tmp").attr({
-				x: x,
-				y: y,
-				z: z,
-				w: size,
-				h: size,
-				tx: x,
-				ty: y,
-				dx: 0,
-				dy: 0
-			});
+            chess.sprite = Crafty.e("2D, Canvas, tmp").attr({
+                x: x,
+                y: y,
+                z: z,
+                w: size,
+                h: size,
+                tx: x,
+                ty: y,
+                dx: 0,
+                dy: 0
+            });
 
-			chess.moveAnimation();
-		}
+            chess.moveAnimation();
+        }
 
-		return chess;
-	}
+        return chess;
+    }
 }
 
 
@@ -139,10 +139,23 @@ class GameLogic {
         ["", "bc", "", "", "", "", "", "bc", ""],
         ["", "", "", "", "", "", "", "", ""],
         ["bv", "bh", "be", "bo", "bt", "bo", "be", "bh", "bv"]];
+        this.original_checkerboard = this.checkerboard;
         this.lastCheckerboard = [];
-        console.log("entered");
+        this.lastMove = [];
+        // console.log("entered");
         this.loadBoard();
         this.loadChess();
+    }
+
+    reset() {
+        console.log("originalIdToPoint=" + this.originalIdToPoint);
+        console.log("idToPoint=" + this.idToPoint);
+        this.checkerboard = this.original_checkerboard;
+        this.idToPoint = this.originalIdToPoint;
+        this.pointToId = this.originalPointToId;
+        for (var i = 0; i < this.idToChess.length; i++) {
+            this.setChess(this.idToChess[i], this.idToPoint[i][0], this.idToPoint[i][1]);
+        }
     }
 
     setChess(chess, r, c) {
@@ -179,21 +192,21 @@ class GameLogic {
         }
     }
 
-	loadBoard() {
-        console.log("entered");
-		Crafty.init(this.w, this.h, document.getElementById('game'));
-		Crafty.sprite(this.board_img_file, {
-			board: [0, 0, this.b_img_w, this.b_img_h]
-		});
+    loadBoard() {
+        // console.log("entered");
+        Crafty.init(this.w, this.h, document.getElementById('game'));
+        Crafty.sprite(this.board_img_file, {
+            board: [0, 0, this.b_img_w, this.b_img_h]
+        });
 
-		game.sprite = Crafty.e("2D, Canvas, board, Mouse").attr({
-			x: 0,
-			y: 0,
-			z: 0,
-			w: this.w,
-			h: this.h
-		});	
-	}
+        game.sprite = Crafty.e("2D, Canvas, board, Mouse").attr({
+            x: 0,
+            y: 0,
+            z: 0,
+            w: this.w,
+            h: this.h
+        });
+    }
 
     loadChess() {
         this.idToChess = [];
@@ -215,16 +228,19 @@ class GameLogic {
 
         for (let i = 0; i < this.idToChess.length; i++) {
             var chess = this.idToChess[i];
-            console.log("type="+chess.type);
+            // console.log("type="+chess.type);
             var point = this.idToPoint[i];
             chess.loadChess();
             this.setChess(chess, point[0], point[1]);
         }
+
+        this.originalIdToPoint = this.idToPoint;
+        this.originalPointToId = this.pointToId;
     }
 
     uiMove(sourcePoint, targetPoint, removeTarget) {
-        var sourceId  = this.pointToId[sourcePoint[0]][sourcePoint[1]];
-        var targetColor  = this.pointToId[targetPoint[0]][targetPoint[1]];
+        var sourceId = this.pointToId[sourcePoint[0]][sourcePoint[1]];
+        var targetColor = this.pointToId[targetPoint[0]][targetPoint[1]];
         if (removeTarget) {
             var targetChess = this.idToChess[targetColor];
             this.hideChess(targetChess);
@@ -297,7 +313,7 @@ class GameLogic {
         sourcePoint[0] = index;
         sourcePoint[1] = location;
         if (moveDirection == "gf") {
-            console.log("index", index, "moveRange", moveRange, "moveDirection", moveDirection);
+            // console.log("index", index, "moveRange", moveRange, "moveDirection", moveDirection);
             switch (chessPiece) {
                 case "v":
                     if (color == "r") {
@@ -339,7 +355,7 @@ class GameLogic {
                 case "h":
                     if (color == "r") {
                         moveRange = 10 - moveRange;
-                        console.log("moveRange", moveRange, "location", location);
+                        // console.log("moveRange", moveRange, "location", location);
                         if (moveRange - 1 == location - 1 || moveRange - 1 == location + 1) {
                             if (this.findOut("", location, "vertical", [index + 1, index + 1]).length != 1)
                                 return status;
@@ -553,7 +569,7 @@ class GameLogic {
             } // switch
         } // moveDirection is gf
         else if (moveDirection == "gb") {
-            console.log("index", index, "moveRange", moveRange, "moveDirection", moveDirection);
+            // console.log("index", index, "moveRange", moveRange, "moveDirection", moveDirection);
             switch (chessPiece) {
                 case "v":
                     if (color == "r") {
@@ -795,7 +811,7 @@ class GameLogic {
             if (color == "r")
                 moveRange = 10 - moveRange;
             moveRange = moveRange - 1;
-            console.log("index", index, "moveRange", moveRange, "moveDirection", moveDirection);
+            // console.log("index", index, "moveRange", moveRange, "moveDirection", moveDirection);
             switch (chessPiece) {
                 case "v":
                     if ((this.findOut("", index, "horization", [location, moveRange]).length != Math.abs(moveRange - location) - 1 && this.checkerboard[index][moveRange] != "") && (this.findOut("", index, "horization", [location, moveRange]).length != Math.abs(moveRange - location) && this.checkerboard[index][moveRange] == ""))
@@ -862,17 +878,17 @@ class GameLogic {
                 status = 4;
             }
             else {
-                let temp=this.checkerboard[targetPoint[0]][targetPoint[1]];
-                this.checkerboard[targetPoint[0]][targetPoint[1]]=this.checkerboard[index][location];
-                this.checkerboard[index][location]="";
-                if ((color=="r" && this.warning("b").length !=0) || (color=="b" && this.warning("r") !=0)){
-                    this.checkerboard[index][location]=this.checkerboard[targetPoint[0]][targetPoint[1]];
-                    this.checkerboard[targetPoint[0]][targetPoint[1]]=temp;
+                let temp = this.checkerboard[targetPoint[0]][targetPoint[1]];
+                this.checkerboard[targetPoint[0]][targetPoint[1]] = this.checkerboard[index][location];
+                this.checkerboard[index][location] = "";
+                if ((color == "r" && this.warning("b").length != 0) || (color == "b" && this.warning("r") != 0)) {
+                    this.checkerboard[index][location] = this.checkerboard[targetPoint[0]][targetPoint[1]];
+                    this.checkerboard[targetPoint[0]][targetPoint[1]] = temp;
                     return 0;
                 }
-                if (this.warning(color).length !=0) {
-                    status=5;
-                    
+                if (this.warning(color).length != 0) {
+                    status = 5;
+
                 } //else
             }
             //console.log("目标点",targetPoint,this.checkerboard[targetPoint[0]][targetPoint[1]]);
@@ -908,7 +924,7 @@ class GameLogic {
     }//findOut
 
     decision(color, point) {
-        console.log("目标位置检测", point);
+        // console.log("目标位置检测", point);
         if (this.checkerboard[point[0]][point[1]] == "")
             return [1, point];
         else {
@@ -934,8 +950,8 @@ class GameLogic {
                     kingPosition.push(i, j);
             }// for 2
         }//for1
-        console.log("我方部署", positionList, positionList.length);
-        console.log("kingPosition", kingPosition);
+        // console.log("我方部署", positionList, positionList.length);
+        // console.log("kingPosition", kingPosition);
         for (let i = 0; i < positionList.length; i++) {
             let k = positionList[i][1][0];
             let j = positionList[i][1][1];
@@ -969,7 +985,7 @@ class GameLogic {
                     }
             }//switch
         }//for
-        console.log("将军棋", threatList);
+        // console.log("将军棋", threatList);
         return threatList;
     }//warning
 
@@ -987,258 +1003,258 @@ class GameLogic {
         }//for1
         return result;
     } //role
-    
-    killup(myId){
-        let targetColor="b";
-        if (myId=="b")
-            targetColor="r";
+
+    killup(myId) {
+        let targetColor = "b";
+        if (myId == "b")
+            targetColor = "r";
         let threatList = this.warning(myId);
         let kingPosition = this.searchRole(targetColor, "t");
-        console.log("kingPosition",kingPosition);
-        console.log("threatList",threatList);
+        // console.log("kingPosition",kingPosition);
+        // console.log("threatList",threatList);
         //被将军的老将自己向四个方向尝试移动，试探可能的逃脱位置
-        if (![0,5].includes(this.action(targetColor,"t",kingPosition[0][1], "gf","1"))){
+        if (![0, 5].includes(this.action(targetColor, "t", kingPosition[0][1], "gf", "1"))) {
             this.stepback();
-            console.log("king",this.searchRole(targetColor,"t"));
+            // console.log("king",this.searchRole(targetColor,"t"));
             return 0;
         }
         this.stepback();
-        if (![0,5].includes(this.action(targetColor,"t",kingPosition[0][1], "gb","1"))){
+        if (![0, 5].includes(this.action(targetColor, "t", kingPosition[0][1], "gb", "1"))) {
             this.stepback();
             return 0;
         }
         this.stepback();
-        if (kingPosition[0][1]==5){
-            if (![0,5].includes(this.action(targetColor,"t",kingPosition[0][1], "gh","4"))){
+        if (kingPosition[0][1] == 5) {
+            if (![0, 5].includes(this.action(targetColor, "t", kingPosition[0][1], "gh", "4"))) {
                 this.stepback();
                 return 0;
             }
             this.stepback();
-            if (![0,5].includes(this.action(targetColor,"t",kingPosition[0][1], "gh","6"))){
+            if (![0, 5].includes(this.action(targetColor, "t", kingPosition[0][1], "gh", "6"))) {
                 this.stepback();
                 return 0;
             }
             this.stepback();
         }
         else {
-            if (![0,5].includes(this.action(targetColor,"t",kingPosition[0][1], "gh","5"))){
+            if (![0, 5].includes(this.action(targetColor, "t", kingPosition[0][1], "gh", "5"))) {
                 this.stepback();
                 return 0;
             }
             this.stepback();
         }
         //console.log("threatList",threatList);
-        kingPosition=kingPosition[0];
-        if (targetColor=="b"){
+        kingPosition = kingPosition[0];
+        if (targetColor == "b") {
             kingPosition[0] = 10 - kingPosition[0];
             kingPosition[1] = 9 - kingPosition[1];
         }
         else {
-            kingPosition[0]-=1;
-            kingPosition[1]-=1;
+            kingPosition[0] -= 1;
+            kingPosition[1] -= 1;
         }
-        for (let i =0; i < threatList.length; i++){
-            let x=threatList[i][1][0];
-            let y=threatList[i][1][1];
-            if (this.eatIt([x,y], targetColor) ==1)
+        for (let i = 0; i < threatList.length; i++) {
+            let x = threatList[i][1][0];
+            let y = threatList[i][1][1];
+            if (this.eatIt([x, y], targetColor) == 1)
                 return 0;
-            console.log("here5");
+            // console.log("here5");
             switch (this.checkerboard[x][y][1]) {
                 case "v":
-                console.log("x,y",x,y,"kingPosition",kingPosition);
-                
-                if ( x ==kingPosition[0]){
-                    if (y < kingPosition[1]){
-                        for (let j =y+1; j < kingPosition[1]; j++){
-                            if (this.eatIt([x,j], targetColor) ==1)
-                                return 0;
+                    // console.log("x,y",x,y,"kingPosition",kingPosition);
+
+                    if (x == kingPosition[0]) {
+                        if (y < kingPosition[1]) {
+                            for (let j = y + 1; j < kingPosition[1]; j++) {
+                                if (this.eatIt([x, j], targetColor) == 1)
+                                    return 0;
+                            }
                         }
-                    }
-                    else{
-                        for (let j = kingPosition[1]+1; j < y; j++){
-                            if (this.eatIt([x,j], targetColor) ==1)
-                                return 0;
+                        else {
+                            for (let j = kingPosition[1] + 1; j < y; j++) {
+                                if (this.eatIt([x, j], targetColor) == 1)
+                                    return 0;
+                            }
                         }
-                    }
-                } //if
-                else {
-                    if (x < kingPosition[0]){
-                        for (let j =x+1; j < kingPosition[0]; j++){
-                            if (this.eatIt([j,y], targetColor) ==1)
-                                return 0;
+                    } //if
+                    else {
+                        if (x < kingPosition[0]) {
+                            for (let j = x + 1; j < kingPosition[0]; j++) {
+                                if (this.eatIt([j, y], targetColor) == 1)
+                                    return 0;
+                            }
                         }
-                    }
-                    else{
-                        for (let j = kingPosition[0]+1; j < x; j++){
-                            if (this.eatIt([j,y], targetColor) ==1)
-                                return 0;
+                        else {
+                            for (let j = kingPosition[0] + 1; j < x; j++) {
+                                if (this.eatIt([j, y], targetColor) == 1)
+                                    return 0;
+                            }
                         }
-                    }
-                } //else
-                break;
+                    } //else
+                    break;
                 case "h":
-                if (Math.abs(x - kingPosition[0]) ==2){
-                    if (this.eatIt([(x + kingPosition[0])/2, (x + kingPosition[0])/2],targetColor) ==1)
-                        return 0;
-                }
-                if (Math.abs(y - kingPosition[1]) ==2){
-                    if (this.eatIt([(y + kingPosition[1])/2, (y + kingPosition[1])/2], targetColor) ==1)
-                        return 0;
-                }
-                break;
+                    if (Math.abs(x - kingPosition[0]) == 2) {
+                        if (this.eatIt([(x + kingPosition[0]) / 2, (x + kingPosition[0]) / 2], targetColor) == 1)
+                            return 0;
+                    }
+                    if (Math.abs(y - kingPosition[1]) == 2) {
+                        if (this.eatIt([(y + kingPosition[1]) / 2, (y + kingPosition[1]) / 2], targetColor) == 1)
+                            return 0;
+                    }
+                    break;
                 case "c":
-                if ( x ==kingPosition[0]){
-                    if (y < kingPosition[1]){
-                        for (let j =y+1; j < kingPosition[1]; j++){
-                            if (this.checkerboard[x][j] !=""){
-                                if (this.checkerboard[x][j][0] ==targetColor)
-                                    return 0;
+                    if (x == kingPosition[0]) {
+                        if (y < kingPosition[1]) {
+                            for (let j = y + 1; j < kingPosition[1]; j++) {
+                                if (this.checkerboard[x][j] != "") {
+                                    if (this.checkerboard[x][j][0] == targetColor)
+                                        return 0;
+                                    else {
+                                        if (this.eatIt([x, j], targetColor) == 1)
+                                            return 0;
+                                    }
+                                }
                                 else {
-                                    if (this.eatIt([x,j], targetColor) ==1)
+                                    if (this.eatIt([x, j], targetColor) == 1)
                                         return 0;
                                 }
                             }
-                            else{
-                                if (this.eatIt([x,j], targetColor) ==1)
-                                    return 0;
-                            }
                         }
-                    }
-                    else{
-                        for (let j = kingPosition[1]+1; j < y; j++){
-                            if (this.checkerboard[x][j]!=""){
-                                if (this.checkerboard[x][j][0] ==targetColor)
-                                    return 0;
+                        else {
+                            for (let j = kingPosition[1] + 1; j < y; j++) {
+                                if (this.checkerboard[x][j] != "") {
+                                    if (this.checkerboard[x][j][0] == targetColor)
+                                        return 0;
+                                    else {
+                                        if (this.eatIt([x, j], targetColor) == 1)
+                                            return 0;
+                                    }
+                                }
                                 else {
-                                    if (this.eatIt([x,j] , targetColor) ==1)
+                                    if (this.eatIt([x, j], targetColor) == 1)
                                         return 0;
                                 }
                             }
-                            else {
-                                if (this.eatIt([x,j], targetColor) ==1)
-                                    return 0;
-                            }
                         }
-                    }
-                } //if
-                else {
-                    if (x < kingPosition[0]){
-                        for (let j =x+1; j < kingPosition[0]; j++){
-                            if (this.checkerboard[j][y]!=""){
-                                if (this.checkerboard[j][y][0] ==targetColor)
-                                    return 0;
+                    } //if
+                    else {
+                        if (x < kingPosition[0]) {
+                            for (let j = x + 1; j < kingPosition[0]; j++) {
+                                if (this.checkerboard[j][y] != "") {
+                                    if (this.checkerboard[j][y][0] == targetColor)
+                                        return 0;
+                                    else {
+                                        if (this.eatIt([j, y], targetColor) == 1)
+                                            return 0;
+                                    }
+                                }
                                 else {
-                                    if (this.eatIt([j,y] , targetColor) ==1)
+                                    if (this.eatIt([j, y], targetColor) == 1)
                                         return 0;
                                 }
                             }
-                            else {
-                                if (this.eatIt([j,y], targetColor) ==1)
-                                    return 0;
-                            }
                         }
-                    }
-                    else{
-                        for (let j = kingPosition[0]+1; j < x; j++){
-                            if (this.checkerboard[j][y]!=""){
-                                if (this.checkerboard[j][y][0] ==targetColor)
-                                    return 0;
+                        else {
+                            for (let j = kingPosition[0] + 1; j < x; j++) {
+                                if (this.checkerboard[j][y] != "") {
+                                    if (this.checkerboard[j][y][0] == targetColor)
+                                        return 0;
+                                    else {
+                                        if (this.eatIt([j, y], targetColor) == 1)
+                                            return 0;
+                                    }
+                                }
                                 else {
-                                    if (this.eatIt([j,y] , targetColor) ==1)
+                                    if (this.eatIt([j, y], targetColor) == 1)
                                         return 0;
                                 }
                             }
-                            else {
-                                if (this.eatIt([j,y], targetColor) ==1)
-                                    return 0;
-                            }
                         }
-                    }
-                } //else
-                break;
+                    } //else
+                    break;
                 default:
-                console.log(8);
+                // console.log(8);
             } //switch
         } //for
         return 1;
     } //killup
-    
-    eatIt(position, color){
+
+    eatIt(position, color) {
         let characterList = [];
-        for (let i =0;i < 10; i++){
-            for (let j =0; j < 9; j++){
-                if(this.checkerboard[i][j][0]==color)
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (this.checkerboard[i][j][0] == color)
                     characterList.push([i, j]);
             }
         }
-        console.log(characterList);
-        for (let i =0; i < characterList.length; i++){
-            let x=characterList[i][0];
+        // console.log(characterList);
+        for (let i = 0; i < characterList.length; i++) {
+            let x = characterList[i][0];
             let y = characterList[i][1];
             switch (this.checkerboard[x][y][1]) {
                 case "v":
-                if (x ==position[0]) {
-                    console.log("length",this.findOut("",x, "horization", [y,position[1]]).length);
-                    if (this.findOut("",x, "horization", [y,position[1]]).length ==Math.abs(y - position[1] -1)) 
-                        return 1;
-                    
-                } //if
-                if (y ==position[1]) {
-                    if (this.findOut("", y, "vertical", [x, position[0]]).length == Math.abs(x - position[0] -1))
-                        return 1;
-                }//if 
-                break;
+                    if (x == position[0]) {
+                        // console.log("length",this.findOut("",x, "horization", [y,position[1]]).length);
+                        if (this.findOut("", x, "horization", [y, position[1]]).length == Math.abs(y - position[1] - 1))
+                            return 1;
+
+                    } //if
+                    if (y == position[1]) {
+                        if (this.findOut("", y, "vertical", [x, position[0]]).length == Math.abs(x - position[0] - 1))
+                            return 1;
+                    }//if 
+                    break;
                 case "h":
-                if (Math.abs(x - position[0]) ==2 && Math.abs(y - position[1]) ==1){
-                    if (this.findOut("", y, "vertical", [(x+position[0])/2,(x+position[0])/2]).length==1)
-                        return 1;
-                }
-                if (Math.abs(y - position[1]) ==2 && Math.abs(x - position[0]) ==1){
-                    if (this.findOut("", x, "horization", [(y+position[1])/2, (y+position[1])/2]).length ==1) 
-                        return 1;
-                }
-                break;
+                    if (Math.abs(x - position[0]) == 2 && Math.abs(y - position[1]) == 1) {
+                        if (this.findOut("", y, "vertical", [(x + position[0]) / 2, (x + position[0]) / 2]).length == 1)
+                            return 1;
+                    }
+                    if (Math.abs(y - position[1]) == 2 && Math.abs(x - position[0]) == 1) {
+                        if (this.findOut("", x, "horization", [(y + position[1]) / 2, (y + position[1]) / 2]).length == 1)
+                            return 1;
+                    }
+                    break;
                 case "c":
-                if (x==position[0]) {
-                    if (this.findOut("",x, "horization", [y,position[1]]).length ==Math.abs(y - position[1] -2)) 
-                        return 1;
-                }
-                if (y == position[1]) {
-                    if (this.findOut("", y, "vertical", [x, position[0]]).length == Math.abs(x - position[0] -2))
-                        return 1;
-                }
-                break;
+                    if (x == position[0]) {
+                        if (this.findOut("", x, "horization", [y, position[1]]).length == Math.abs(y - position[1] - 2))
+                            return 1;
+                    }
+                    if (y == position[1]) {
+                        if (this.findOut("", y, "vertical", [x, position[0]]).length == Math.abs(x - position[0] - 2))
+                            return 1;
+                    }
+                    break;
                 case "o":
-                if (color =="b"){
-                if ([7,8,9].includes(position[0]) && [3,4,5].includes(position[1]))
-                    if (Math.abs(x - position[0])==1 && Math.abs(y - position[1])==1)
-                        return 1;
-                }
-                else {
-                    if ([0,1,2].includes(position[0]) && [3,4,5].includes(position[1]))
-                        if (Math.abs(x - position[0]) ==1 && Math.absj(y - position[1]) ==1)
-                            return 1;
-                }
-                break;
+                    if (color == "b") {
+                        if ([7, 8, 9].includes(position[0]) && [3, 4, 5].includes(position[1]))
+                            if (Math.abs(x - position[0]) == 1 && Math.abs(y - position[1]) == 1)
+                                return 1;
+                    }
+                    else {
+                        if ([0, 1, 2].includes(position[0]) && [3, 4, 5].includes(position[1]))
+                            if (Math.abs(x - position[0]) == 1 && Math.absj(y - position[1]) == 1)
+                                return 1;
+                    }
+                    break;
                 case "e":
-                if (color=="r"){
-                    if (position[0] < 5)
-                        if (Math.abs(x - position[0])==2 && Math.abs(y - position[1])==2)
-                            return 1;
-                }
-                else {
-                    if (position[0] > 4) 
-                        if (Math.abs(x - position[0]) ==2 && Math.abs(y - position[1]) ==2) 
-                            return 1;
-                }
-                break;
+                    if (color == "r") {
+                        if (position[0] < 5)
+                            if (Math.abs(x - position[0]) == 2 && Math.abs(y - position[1]) == 2)
+                                return 1;
+                    }
+                    else {
+                        if (position[0] > 4)
+                            if (Math.abs(x - position[0]) == 2 && Math.abs(y - position[1]) == 2)
+                                return 1;
+                    }
+                    break;
                 default:
-                console.log(9);
+                // console.log(9);
             } //switch
-            
+
         }//for
         return 0;
     } //eatIt
 }
 
-module.exports =GameLogic;
+module.exports = GameLogic;

@@ -19,7 +19,7 @@ class GameController extends EventEmitter {
 		if (this._started) {
 			return false;
 		}
-		this.logic = new GameLogic();
+		this.logic.reset();
 		this._started = true;
 		// this._redInAction = true;
 		// this._roundNumber = 1;
@@ -33,7 +33,6 @@ class GameController extends EventEmitter {
 		if (!this._started) {
 			return false;
 		}
-		this.logic = null;
 		this._started = false;
 		this.emit("gameEnded", winner);
 		return true;
