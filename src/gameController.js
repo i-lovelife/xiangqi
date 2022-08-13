@@ -62,7 +62,7 @@ class GameController extends EventEmitter {
 			case 1:  //走棋成功
 				this._moveCompleted(movedRecord);
 				break;
-			case 2:  //走棋成功并吃子
+			case 2:  //吃子
 				this._moveCompleted(movedRecord);
 				this._eat();
 				break;

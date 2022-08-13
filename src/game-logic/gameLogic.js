@@ -148,8 +148,8 @@ class GameLogic {
     }
 
     reset() {
-        console.log("originalIdToPoint=" + this.originalIdToPoint);
-        console.log("idToPoint=" + this.idToPoint);
+        // console.log("originalIdToPoint=" + this.originalIdToPoint);
+        // console.log("idToPoint=" + this.idToPoint);
         this.checkerboard = this.original_checkerboard;
         this.idToPoint = this.originalIdToPoint;
         this.pointToId = this.originalPointToId;
@@ -185,10 +185,10 @@ class GameLogic {
     hideChess(chess) {
         if (chess != null && chess.sprite != null) {
             chess.sprite.z = -1;
-            chess.sprite.x = w + 1;
-            chess.sprite.y = h + 1;
-            chess.sprite.tx = w + 1;
-            chess.sprite.ty = h + 1;
+            chess.sprite.x = this.w + 1;
+            chess.sprite.y = this.h + 1;
+            chess.sprite.tx = this.w + 1;
+            chess.sprite.ty = this.h + 1;
         }
     }
 
@@ -238,29 +238,44 @@ class GameLogic {
         this.originalPointToId = this.pointToId;
     }
 
-    uiMove(sourcePoint, targetPoint, removeTarget) {
+    uiMove(sourcePoint, targetPoint) {
         var sourceId = this.pointToId[sourcePoint[0]][sourcePoint[1]];
-        var targetColor = this.pointToId[targetPoint[0]][targetPoint[1]];
-        if (removeTarget) {
-            var targetChess = this.idToChess[targetColor];
-            this.hideChess(targetChess);
-            this.pointToId[targetPoint[0]][targetPoint[1]] = -1;
-            this.idToPoint[targetColor] = [-1, -1];
+        var targetId = this.pointToId[targetPoint[0]][targetPoint[1]];
+        if (targetId >= 0) {
+            //var targetChess = this.idToChess[targetId];
+            //this.hideChess(targetChess);
         }
         var sourceChess = this.idToChess[sourceId];
-        this.moveChess(sourceChess, targetPoint[0], targetPoint[1]);
+        this.setChess(sourceChess, targetPoint[0], targetPoint[1]);
         this.pointToId[sourcePoint[0]][sourcePoint[1]] = -1;
         this.pointToId[targetPoint[0]][targetPoint[1]] = sourceId;
         this.idToPoint[sourceId] = [targetPoint[0], targetPoint[1]];
     }
 
     stepback() {
-        if (this.lastCheckerboard.length == 0)
+        if (this.lastMove.length < 1) {
             return false;
-        this.checkerboard = [];
-        for (let i = 0; i < this.lastCheckerboard.length; i++)
-            this.checkerboard.push(this.lastCheckerboard[i].slice());
-        this.lastCheckerboard = [];
+        }
+        var source = this.lastMove[0];
+        var target = this.lastMove[1];
+        [this.checkerboard[source[0]][source[1]], this.checkerboard[target[0]][target[1]]] = 
+        [this.checkerboard[target[0]][target[1]], this.checkerboard[source[0]][source[1]]];
+
+        var targetId = this.pointToId[target[0]][target[1]];
+        this.setChess(this.idToChess[targetId], source[0], source[1]);
+        this.idToPoint[targetId] = [source[0], source[1]];
+        this.pointToId[source[0]][source[1]] = targetId;
+        for (var i = 0; i < this.idToPoint.length; i++) {
+            if (this.idToPoint[i] == [target[0], target[1]]) {
+                // find original chess
+                var originalId = i;
+                this.idToPoint[originalId] = [target[0], target[1]];
+                this.pointToId[target[0]][target[1]] = originalId;
+                this.setChess(this.idToChess[originalId], target[0], target[1]);
+                break;
+            }
+        }
+        
         this.lastMove = [];
         return true;
     }
@@ -895,8 +910,10 @@ class GameLogic {
             //console.log("远点",[index,location],this.checkerboard[index][location]);
         }
         if (status > 0) {
-            this.uiMove(sourcePoint, targetPoint);
+            console.log('src' + sourcePoint);
+            console.log('tgt' + targetPoint);
             this.lastMove = [sourcePoint, targetPoint];
+            this.uiMove(sourcePoint, targetPoint);
         }
         return status;
     } //action
@@ -1004,6 +1021,19 @@ class GameLogic {
         return result;
     } //role
 
+    tryMove(color, role, pos, type, moveRange) {
+        var res = this.action(colr, role, kingPosition[1], type, moveRange);
+        if (res > 0) {
+            var temp = this.lastMove;
+            this.stepback();
+            this.lastMove = temp;
+        }
+        if (res == 5 || res == 0) {
+            return false;
+        }
+        return true;
+    }
+
     killup(myId) {
         let targetColor = "b";
         if (myId == "b")
@@ -1013,35 +1043,24 @@ class GameLogic {
         // console.log("kingPosition",kingPosition);
         // console.log("threatList",threatList);
         //被将军的老将自己向四个方向尝试移动，试探可能的逃脱位置
-        if (![0, 5].includes(this.action(targetColor, "t", kingPosition[0][1], "gf", "1"))) {
-            this.stepback();
-            // console.log("king",this.searchRole(targetColor,"t"));
+        if (this.tryMove(targetColor, "t", kingPosition[0][1], "gf", "1")) {
             return 0;
         }
-        this.stepback();
-        if (![0, 5].includes(this.action(targetColor, "t", kingPosition[0][1], "gb", "1"))) {
-            this.stepback();
+        if (this.tryMove(targetColor, "t", kingPosition[0][1], "gb", "1")) {
             return 0;
         }
-        this.stepback();
         if (kingPosition[0][1] == 5) {
-            if (![0, 5].includes(this.action(targetColor, "t", kingPosition[0][1], "gh", "4"))) {
-                this.stepback();
+            if (this.tryMove(targetColor, "t", kingPosition[0][1], "gh", "4")) {
                 return 0;
             }
-            this.stepback();
-            if (![0, 5].includes(this.action(targetColor, "t", kingPosition[0][1], "gh", "6"))) {
-                this.stepback();
+            if (this.tryMove(targetColor, "t", kingPosition[0][1], "gh", "6")) {
                 return 0;
             }
-            this.stepback();
         }
         else {
-            if (![0, 5].includes(this.action(targetColor, "t", kingPosition[0][1], "gh", "5"))) {
-                this.stepback();
+            if (this.tryMove(targetColor, "t", kingPosition[0][1], "gh", "5")) {
                 return 0;
             }
-            this.stepback();
         }
         //console.log("threatList",threatList);
         kingPosition = kingPosition[0];
