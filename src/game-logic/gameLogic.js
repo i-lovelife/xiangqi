@@ -242,8 +242,8 @@ class GameLogic {
         var sourceId = this.pointToId[sourcePoint[0]][sourcePoint[1]];
         var targetId = this.pointToId[targetPoint[0]][targetPoint[1]];
         if (targetId >= 0) {
-            //var targetChess = this.idToChess[targetId];
-            //this.hideChess(targetChess);
+            var targetChess = this.idToChess[targetId];
+            this.hideChess(targetChess);
         }
         var sourceChess = this.idToChess[sourceId];
         this.setChess(sourceChess, targetPoint[0], targetPoint[1]);
@@ -1022,7 +1022,7 @@ class GameLogic {
     } //role
 
     tryMove(color, role, pos, type, moveRange) {
-        var res = this.action(colr, role, kingPosition[1], type, moveRange);
+        var res = this.action(color, role, pos[1], type, moveRange);
         if (res > 0) {
             var temp = this.lastMove;
             this.stepback();
