@@ -166,7 +166,6 @@ class GameLogic {
     setChess(chess, r, c) {
         if (chess == null || chess.sprite == null) return;
         r = 9 - r;
-        c = 8 - c;
         var bias_x = (this.cell_size - chess.sprite.w) / 2 + this.b_offset_x;
         var bias_y = (this.cell_size - chess.sprite.h) / 2 + this.b_offset_y;
         var p = {};
@@ -178,7 +177,6 @@ class GameLogic {
     moveChess(chess, r, c) {
         if (chess == null || chess.sprite == null) return;
         r = 9 - r;
-        c = 8 - c;
         var bias_x = (this.cell_size - chess.sprite.w) / 2 + this.b_offset_x;
         var bias_y = (this.cell_size - chess.sprite.h) / 2 + this.b_offset_y;
         var p = {};
