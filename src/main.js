@@ -42,6 +42,15 @@ listenBtn.addEventListener("click", e => {
 	}
 });
 
+const commandInput = document.querySelector('#command-input');  //指令输入框
+commandInput.addEventListener("keydown", e => {
+	if (e.keyCode == 13) {
+		const command = commandInput.value;
+		commandInput.value = "";
+		artyom.simulateInstruction(command);
+	}
+});
+
 
 //初始提示
 printLog("欢迎来到盲棋游戏！");

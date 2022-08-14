@@ -12,14 +12,14 @@ class GameController extends EventEmitter {
 
 	constructor() {
 		super();
-		this.logic = null;
+		this.logic = new GameLogic();
 	}
 
 	startGame() {
 		if (this._started) {
 			return false;
 		}
-		this.logic = new GameLogic();
+		this.logic.reset();
 		this._started = true;
 		// this._redInAction = true;
 		// this._roundNumber = 1;
@@ -33,7 +33,6 @@ class GameController extends EventEmitter {
 		if (!this._started) {
 			return false;
 		}
-		this.logic = null;
 		this._started = false;
 		this.emit("gameEnded", winner);
 		return true;
@@ -63,7 +62,7 @@ class GameController extends EventEmitter {
 			case 1:  //走棋成功
 				this._moveCompleted(movedRecord);
 				break;
-			case 2:  //走棋成功并吃子
+			case 2:  //吃子
 				this._moveCompleted(movedRecord);
 				this._eat();
 				break;

@@ -37,7 +37,7 @@ function extractCommand(rawCommand) {
  */
 class MovedRecord {
 	/**
-	 * @param {String} commandText 着法文本
+	 * @param {String} commandText 招法文本
 	 * @param {Boolean} isRed 是否红方
 	 */
 	constructor(commandText, isRed) {
