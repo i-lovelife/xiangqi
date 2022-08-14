@@ -139,7 +139,7 @@ class GameLogic {
         ["", "bc", "", "", "", "", "", "bc", ""],
         ["", "", "", "", "", "", "", "", ""],
         ["bv", "bh", "be", "bo", "bt", "bo", "be", "bh", "bv"]];
-        this.original_checkerboard = this.checkerboard;
+        this.original_checkerboard = this.copyArray(this.checkerboard);
         this.lastCheckerboard = [];
         this.lastMove = [];
         // console.log("entered");
@@ -147,12 +147,17 @@ class GameLogic {
         this.loadChess();
     }
 
+    copyArray(old) {
+        return JSON.parse(JSON.stringify(old)); 
+    }
+
     reset() {
         // console.log("originalIdToPoint=" + this.originalIdToPoint);
         // console.log("idToPoint=" + this.idToPoint);
-        this.checkerboard = this.original_checkerboard;
-        this.idToPoint = this.originalIdToPoint;
-        this.pointToId = this.originalPointToId;
+        this.checkerboard = this.copyArray(this.original_checkerboard);
+        this.idToPoint = this.copyArray(this.originalIdToPoint);
+        this.pointToId = this.copyArray(this.originalPointToId);
+        this.lastMove = [];
         for (var i = 0; i < this.idToChess.length; i++) {
             this.setChess(this.idToChess[i], this.idToPoint[i][0], this.idToPoint[i][1]);
         }
